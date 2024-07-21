@@ -1,0 +1,8 @@
+<h1>リスト作成ページ</h1>
+
+<%= form_with model: @list do |f| %>
+    <%= f.label :content %>
+    <%= f.text_field :content, id: "content" %>
+  
+    <%= f.submit "保存" %>
+<% end %>

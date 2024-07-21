@@ -1,0 +1,16 @@
+  <%= stylesheet_link_tag '/assets/list_index.css', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<div class="container">
+<h1>リスト一覧ページ</h1>
+
+<% @lists.each do |list| %>
+    <div class="lists-container">
+        <%= link_to "/lists/#{list.id}/edit", class: "link-container" do %>
+                <div class="content"><%= list.content %></div>
+        <% end %>
+        <%= button_to list_path(list), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'delete-btn' do %>
+            <i class="fas fa-trash-alt"></i>
+        <% end %>
+    </div>
+<% end %>
+</div>

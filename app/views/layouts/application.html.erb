@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TodoList</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <header>
+      <ul>
+        <% if user_signed_in? %>
+          <li><%= link_to "アカウント情報更新", edit_user_registration_path %></li>
+          <li><%= link_to "新規作成", new_list_path %></li>
+          <li><%= link_to "一覧", lists_path %></li>
+          <li><%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "header-btn" %></li>
+        <% else %>
+          <li><%= link_to "新規登録", new_user_registration_path %></li>
+          <li><%= link_to "ログイン", new_user_session_path %></li>
+        <% end %>
+      </ul>
+    </header>
+    <%= yield %>
+  </body>
+</html>

@@ -1,3 +1,10 @@
+<head>
+    <%= stylesheet_link_tag '/assets/edit_account.css', media: 'all', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<h2>プロフィール更新</h2>
+
+<div class="edit-container">
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
 
@@ -7,10 +14,11 @@
   </div>
 
   <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+    <div class="pending-confirmation">現在の確認待ちメールアドレス: <%= resource.unconfirmed_email %></div>
   <% end %>
 
   <div class="actions">
-    <%= f.submit "Update" %>
+    <%= f.submit "更新" %>
   </div>
 <% end %>
+</div>

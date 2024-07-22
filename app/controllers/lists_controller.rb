@@ -9,12 +9,14 @@ class ListsController < ApplicationController
     def create
         @list = current_user.lists.build(list_params)
 
-        if @list.save
-            flash[:notice] = "リストを作成しました"
-            redirect_to lists_path
-        else
+        if  @list.content.blank? || !@list.valid?
             flash[:alert] ="リストの作成に失敗しました"
             render :new
+
+        else
+            @list.save
+            flash[:notice] = "リストを作成しました"
+            redirect_to lists_path
         end
     end
 
@@ -29,12 +31,13 @@ class ListsController < ApplicationController
     end
 
     def update
-        if  @list.update(list_params)
+        if  @list.content.blank? || !@list.valid?
+            flash[:alert] = "リストの更新に失敗しました"
+            render edit_list_path
+        else
+          @list.update(list_params)
           flash[:notice] = "リストを更新しました"
           redirect_to lists_path
-        else
-          flash[:alert] = "リストの更新に失敗しました"
-          render :edit
         end
     end
 

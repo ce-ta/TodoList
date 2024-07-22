@@ -1,8 +1,14 @@
-<h1>リスト編集ページ</h1>
+<head>
+    <%= stylesheet_link_tag '/assets/list_edit.css', media: 'all', 'data-turbolinks-track': 'reload' %>
+</head>
 
-<%= form_with model: @list, local: true do |f| %>
-    <%= f.label :content %>
-    <%= f.text_field :content, id: "content" %>
+<div class="list-container">
+    <h1>リスト編集ページ</h1>
+
+    <%= form_with model: @list, local: true do |f| %>
+        <p>ToDo</p>
+        <%= f.text_field :content, id: "content", class: "content" %>
   
-    <%= f.submit "更新" %>
-<% end %>
+        <%= f.submit "更新", class: "edit-btn" %>
+    <% end %>
+</div>

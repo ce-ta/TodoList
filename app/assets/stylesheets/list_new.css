@@ -1,0 +1,27 @@
+.list-container {
+    margin-left: 30px;
+}
+
+p {
+    font-size: 25px;
+}
+
+.content {
+    width: 30%;
+    height: 30px;
+    font-size: 25px;
+    border-radius: 3px black;
+    margin-right: 10px;
+}
+
+.new-btn {
+    font-size: 20px;
+    background-color: rgb(0, 234, 0);
+    border: 1px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.new-btn:hover {
+    background-color: rgb(0, 188, 0);
+}

@@ -1,4 +1,8 @@
-<h2>Forgot your password?</h2>
+<head>
+    <%= stylesheet_link_tag '/assets/password_new.css', media: 'all', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<h2>パスワードの再設定</h2>
 
 <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
@@ -9,8 +13,6 @@
   </div>
 
   <div class="actions">
-    <%= f.submit "Send me reset password instructions" %>
+    <%= f.submit "パスワード再設定用のメールを送信する" %>
   </div>
 <% end %>
-
-<%= render "devise/shared/links" %>

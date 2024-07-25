@@ -7,17 +7,21 @@ class ListsController < ApplicationController
     end
 
     def create
-        @list = current_user.lists.build(list_params)
-
-        if  @list.content.blank? || !@list.valid?
-            flash[:alert] ="リストの作成に失敗しました"
-            render :new
-
-        else
-            @list.save
-            flash[:notice] = "リストを作成しました"
-            redirect_to lists_path
+      @list = current_user.lists.build(list_params)
+    
+      if @list.save
+        respond_to do |format|
+          format.html { redirect_to lists_path, notice: 'リストが追加されました。' }
         end
+      else
+        respond_to do |format|
+          if @list.content.blank?
+            format.html { redirect_to lists_path, alert: '1文字以上入力してください' }
+          elsif @list.content.length > 30
+            format.html { redirect_to lists_path, alert: '30文字以内で入力してください' }
+          end
+        end
+      end
     end
 
     def index
@@ -31,16 +35,20 @@ class ListsController < ApplicationController
     end
 
     def update
-        if  @list.content.blank? || !@list.valid?
-            flash[:alert] = "リストの更新に失敗しました"
-            render edit_list_path
-        else
-          @list.update(list_params)
-          flash[:notice] = "リストを更新しました"
-          redirect_to lists_path
+      if @list.update(list_params)
+        respond_to do |format|
+          format.html { redirect_to lists_path, notice: 'リストが更新されました。' }
         end
+      else
+        respond_to do |format|
+          if @list.content.blank?
+            format.html { redirect_to lists_path, alert: '1文字以上入力してください' }
+          elsif @list.content.length > 30
+            format.html { redirect_to lists_path, alert: '30文字以内で入力してください' }
+          end
+        end
+      end
     end
-
     def destroy
         if @list.destroy
             flash[:notice] = "リストを削除しました"
@@ -55,14 +63,14 @@ class ListsController < ApplicationController
 
     def set_list
         @list = current_user.lists.find(params[:id])
-      end
+    end
     
-      def authorize_user!
+    def authorize_user!
         unless @list.user == current_user
           flash[:alert] = "あなたにはこの操作を行う権限がありません。"
           redirect_to new_session_path
         end
-      end
+    end
 
     def list_params
         params.require(:list).permit(:content)

@@ -1,0 +1,35 @@
+<div class="list-item" id="list_<%= list.id %>">
+  <div class="list-content" data-id="<%= list.id %>"><%= list.content %></div>
+  <% if list.id.present? %>
+    <%= button_to list_path(list), method: :delete, form: { data: { turbo_confirm: "本当に削除しますか？" } }, class: 'delete-btn' do %>
+      <i class="fas fa-trash-alt"></i>
+    <% end %>
+  <% else %>
+    <!-- IDが存在しない場合のプレースホルダーやエラーメッセージを表示 -->
+    <div class="error">リストのIDが存在しません。</div>
+  <% end %>
+
+  <!-- 編集フォーム -->
+  <div class="edit-form-container hidden" id="editFormContainer_<%= list.id %>">
+    <% if list.id.present? %>
+      <%= form_with model: list, url: list_path(list), method: :patch, data: { turbo_frame: "edit-form-frame" }, html: { class: 'edit-form' } do |f| %>
+        <h3>リストを編集</h3>
+        <div class="form-group">
+          <%= f.text_area :content, placeholder: "リスト項目を入力", class: "form-content" %>
+          <% if list.errors.any? %>
+            <div class="error-messages">
+              <% list.errors.full_messages.each do |message| %>
+                <p class="error-message"><%= message %></p>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+        <%= f.submit "保存", class: 'submit-btn' %>
+        <button type="button" class="close-btn" data-id="<%= list.id %>">&times;</button>
+      <% end %>
+    <% else %>
+      <!-- IDが存在しない場合のプレースホルダーやエラーメッセージを表示 -->
+      <div class="error">編集フォームのIDが存在しません。</div>
+    <% end %>
+  </div>
+</div>

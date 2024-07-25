@@ -1,0 +1,15 @@
+<%= form_with model: list, method: :patch, data: { turbo_frame: "edit-form-frame" }, html: { class: 'edit-form' } do |f| %>
+    <h3>リストを編集</h3>
+    <div class="form-group">
+  <%= f.text_field :content, placeholder: "リスト項目を入力", class: "form-content" %>
+  <% if list.errors.any? %>
+    <div class="error-messages">
+      <% list.errors.full_messages.each do |message| %>
+        <p class="error-message"><%= message %></p>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+    <%= f.submit "保存", class: 'submit-btn' %>
+    <button type="button" class="close-btn" data-id="<%= list.id %>">&times;</button>
+  <% end %>

@@ -1,36 +1,59 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>TodoList</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+<head>
+  <title>TodoList</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
-  </head>
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <%= javascript_importmap_tags %>
+</head>
 
-  <body>
-    <header>
-      <ul>
-        <% if user_signed_in? %>
-          <li><%= link_to "アカウント情報更新", edit_user_registration_path %></li>
-          <li><%= link_to "新規作成", new_list_path %></li>
-          <li><%= link_to "一覧", lists_path %></li>
-          <li><%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "header-btn" %></li>
-        <% else %>
-          <li><%= link_to "新規登録", new_user_registration_path %></li>
-          <li><%= link_to "ログイン", new_user_session_path %></li>
-        <% end %>
-      </ul>
-    </header>
-
-    <% flash.each do |key, message| %>
-      <div class="alert alert-<%= key %>">
-        <%= message %>
+<body>
+  <header>
+    <h1><%= link_to "ToDoリスト", "/" %></h1>
+    <div class="menu-icon">
+      <i class="fas fa-bars"></i>
+    </div>
+    <ul class="nav-links">
+      <div class="close-icon">
+        <i class="fas fa-times"></i>
       </div>
-    <% end %>
-    
-    <%= yield %>
-  </body>
+      <% if user_signed_in? %>
+        <li><%= link_to "アカウント情報更新", edit_user_registration_path %></li>
+        <li><%= link_to "一覧", lists_path %></li>
+        <li><%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "header-btn" %></li>
+      <% else %>
+        <li><%= link_to "新規登録", new_user_registration_path %></li>
+        <li><%= link_to "ログイン", new_user_session_path %></li>
+      <% end %>
+    </ul>
+  </header>
+
+  <% flash.each do |key, message| %>
+    <div class="alert alert-<%= key %>">
+      <%= message %>
+    </div>
+  <% end %>
+
+  <%= yield %>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const menuIcon = document.querySelector(".menu-icon");
+      const closeIcon = document.querySelector(".close-icon");
+      const navLinks = document.querySelector(".nav-links");
+
+      menuIcon.addEventListener("click", function() {
+        navLinks.classList.toggle("active");
+      });
+
+      closeIcon.addEventListener("click", function() {
+        navLinks.classList.remove("active");
+      });
+    });
+  </script>
+</body>
 </html>

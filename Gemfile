@@ -33,6 +33,16 @@ gem "bootstrap"
 
 gem 'font-awesome-sass'
 
+gem 'letter_opener'
+gem 'letter_opener_web'
+
+gem 'rails-i18n'
+
+gem 'rubocop', require: false # 追加
+gem 'rubocop-performance', require: false # 追加
+gem 'rubocop-rails', require: false # 追加
+gem 'rubocop-rspec' # 追加
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 

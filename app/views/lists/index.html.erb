@@ -1,16 +1,151 @@
-  <%= stylesheet_link_tag '/assets/list_index.css', media: 'all', 'data-turbolinks-track': 'reload' %>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<div class="container">
-<h1>リスト一覧ページ</h1>
+<%= stylesheet_link_tag '/assets/list_index.css', media: 'all', 'data-turbolinks-track': 'reload' %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-<% @lists.each do |list| %>
-    <div class="lists-container">
-        <%= link_to "/lists/#{list.id}/edit", class: "link-container" do %>
-                <div class="content"><%= list.content %></div>
-        <% end %>
-        <%= button_to list_path(list), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'delete-btn' do %>
-            <i class="fas fa-trash-alt"></i>
-        <% end %>
+<!-- 追加フォーム -->
+<div class="add-form-container hidden" id="addFormContainer">
+  <%= form_with model: List.new, url: lists_path, method: :post, data: { turbo_frame: 'list-form-frame' }, html: { class: 'add-form' } do |f| %>
+    <div class="form-group">
+      <h3>リストを追加</h3>
+      <%= f.text_area :content, id: "content", placeholder: "リスト項目を入力", class: "form-content" %>
     </div>
-<% end %>
+    <%= f.submit "追加", class: 'submit-btn' %>
+    <button type="button" class="close-btn" id="closeBtn">&times;</button>
+  <% end %>
 </div>
+
+<!-- オーバーレイ -->
+<div id="overlay" class="overlay hidden"></div>
+
+<!-- リスト一覧 -->
+<div class="container">
+  <h1>リスト一覧</h1>
+
+  <div id="lists">
+    <% @lists.each do |list| %>
+      <%= render partial: 'list', locals: { list: list } %>
+    <% end %>
+  </div>
+
+  <!-- プラスアイコン -->
+  <div class="add-icon-container">
+    <i class="fas fa-plus-circle" id="addIcon"></i>
+  </div>
+</div>
+
+<script>
+document.addEventListener('turbo:load', () => {
+  const addFormContainer = document.getElementById('addFormContainer');
+  const addIcon = document.getElementById('addIcon');
+  const closeBtn = document.getElementById('closeBtn');
+  const overlay = document.getElementById('overlay');
+  const addForm = document.querySelector('.add-form'); // フォーム要素を取得
+
+  // フォームを初期状態で隠す
+  if (addFormContainer) {
+    addFormContainer.classList.add('hidden');
+  }
+
+  const showOverlay = () => {
+    if (overlay) {
+      overlay.classList.remove('hidden');
+    }
+  };
+
+  const hideOverlay = () => {
+    if (overlay) {
+      overlay.classList.add('hidden');
+    }
+  };
+
+  // プラスアイコンをクリックしたときの処理
+  if (addIcon) {
+    addIcon.addEventListener('click', () => {
+      if (addFormContainer) {
+        addFormContainer.classList.remove('hidden'); // フォームを表示
+        setTimeout(() => {
+          addFormContainer.style.transform = 'translateY(0)'; // スライドイン
+          showOverlay(); // オーバーレイを表示
+        }, 10); // 少し待ってからアニメーションを開始
+      }
+    });
+  }
+
+  // 閉じるボタンをクリックしたときの処理
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      if (addFormContainer) {
+        addFormContainer.style.transform = 'translateY(100%)'; // スライドアウト
+        setTimeout(() => {
+          addFormContainer.classList.add('hidden'); // アニメーション後に隠す
+          hideOverlay(); // オーバーレイを隠す
+        }, 300); // アニメーションの時間と一致させる
+      }
+    });
+  }
+
+  // フォーム送信後にフォームを閉じる処理
+  document.addEventListener('turbo:submit-end', (event) => {
+    if (event.target && event.target.matches('.add-form')) {
+      if (addFormContainer) {
+        addFormContainer.style.transform = 'translateY(100%)'; // スライドアウト
+        setTimeout(() => {
+          addFormContainer.classList.add('hidden'); // アニメーション後に隠す
+          hideOverlay(); // オーバーレイを隠す
+          
+          // フォームをリセットする
+          if (addForm) {
+            addForm.reset();
+          }
+        }, 300); // アニメーションの時間と一致させる
+      }
+    }
+  });
+
+  // リスト項目クリック時の処理
+  document.addEventListener('click', (event) => {
+    const listContent = event.target.closest('.list-content');
+    if (listContent) {
+      const listId = listContent.dataset.id;
+      const editFormContainer = document.getElementById(`editFormContainer_${listId}`);
+      if (editFormContainer) {
+        editFormContainer.classList.remove('hidden');
+        setTimeout(() => {
+          editFormContainer.style.transform = 'translateY(0)';
+          showOverlay(); // オーバーレイを表示
+        }, 10);
+      }
+    }
+  });
+
+  // 閉じるボタンのクリック時の処理
+  document.addEventListener('click', (event) => {
+    const closeButton = event.target.closest('.edit-form-container .close-btn');
+    if (closeButton) {
+      const listId = closeButton.dataset.id;
+      const editFormContainer = document.getElementById(`editFormContainer_${listId}`);
+      if (editFormContainer) {
+        editFormContainer.style.transform = 'translateY(100%)';
+        setTimeout(() => {
+          editFormContainer.classList.add('hidden');
+          hideOverlay(); // オーバーレイを隠す
+        }, 300);
+      }
+    }
+  });
+
+  // フォーム送信後にフォームを閉じる処理（編集フォーム用）
+  document.addEventListener('turbo:submit-end', (event) => {
+    if (event.target && event.target.matches('.edit-form')) {
+      const listId = event.target.querySelector('.close-btn').dataset.id;
+      const editFormContainer = document.getElementById(`editFormContainer_${listId}`);
+      if (editFormContainer) {
+        editFormContainer.style.transform = 'translateY(100%)';
+        setTimeout(() => {
+          editFormContainer.classList.add('hidden');
+          hideOverlay(); // オーバーレイを隠す
+        }, 300);
+      }
+    }
+  });
+});
+</script>

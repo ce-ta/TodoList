@@ -1,9 +1,9 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable, :timeoutable
 
   validates :email, presence: true, uniqueness: true
-  validates :password, presence: true
+  validate :password_presence_on_create
 
   has_many :lists, dependent: :destroy
 
@@ -18,5 +18,13 @@ class User < ApplicationRecord
     result = update(params, *options)
     clean_up_passwords
     result
+  end
+
+  private
+
+  def password_presence_on_create
+    if new_record? && password.blank?
+      errors.add(:password, :blank)
+    end
   end
 end

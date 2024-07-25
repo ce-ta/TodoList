@@ -43,6 +43,8 @@ gem 'rubocop-performance', require: false # 追加
 gem 'rubocop-rails', require: false # 追加
 gem 'rubocop-rspec' # 追加
 
+gem 'turbo-rails'
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 

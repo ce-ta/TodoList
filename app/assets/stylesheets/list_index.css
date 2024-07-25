@@ -19,6 +19,14 @@ h1 {
     color: #333;
 }
 
+.no-list {
+  justify-content: centent;
+  text-align: center;
+  font-size: 40px;
+  font-weight: bold;
+  margin-top: 100px;
+}
+
 .list-item {
     display: flex;
     align-items: center;
@@ -170,5 +178,9 @@ h1 {
 
   .form-content {
     height: 110px;
+  }
+
+  .no-list {
+    font-size: 35px;
   }
 }

@@ -21,8 +21,12 @@
   <h1>リスト一覧</h1>
 
   <div id="lists">
-    <% @lists.each do |list| %>
-      <%= render partial: 'list', locals: { list: list } %>
+    <% if @lists.blank? %>
+      <h2 class="no-list">リストはありません</h2>
+    <% else %>
+      <% @lists.each do |list| %>
+        <%= render partial: 'list', locals: { list: list } %>
+      <% end %>
     <% end %>
   </div>
 

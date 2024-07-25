@@ -1,17 +1,26 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  def create
+    super
+    if @user.save
+      flash[:notice] = "ようこそ"
+    end
+  end
+
   def destroy
-    resource.destroy
-    Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
-    set_flash_message! :notice, :destroyed
-    yield resource if block_given?
+    super
+    flash[:notice] = "アカウントが削除されました"
   end
 
   protected
 
+  def after_sign_up_path_for(resource)
+    lists_path
+  end
+
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:email])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :password_confirmation])
     devise_parameter_sanitizer.permit(:account_update, keys: [:email, :password, :password_confirmation])
   end
 

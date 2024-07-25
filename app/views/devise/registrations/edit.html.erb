@@ -21,6 +21,18 @@
     <%= f.submit "更新" %>
 <% end %>
 
-<%= button_to "アカウント削除", registration_path(resource), method: :delete, form: { data: { turbo_confirm: "本当に削除しますか？" } }, class: "delete-btn" %>
+  <%= button_to "アカウント削除", registration_path(resource), method: :delete, form: { data: { turbo_confirm: "本当に削除しますか？" } }, class: "delete-btn" %>
 </div>
 </div>
+
+<script>
+document.addEventListener('turbo:load', () => {
+  document.querySelectorAll('form[data-turbo-confirm]').forEach((element) => {
+    element.addEventListener('submit', (event) => {
+      if (!confirm(element.getAttribute('data-turbo-confirm'))) {
+        event.preventDefault();
+      }
+    });
+  });
+});
+</script>
